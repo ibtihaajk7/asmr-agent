@@ -12,7 +12,7 @@ from src.config.constants import (
     load_session_info,
 )
 
-# Load API key from .env file
+# Load API key from .env file for resemble
 load_dotenv()
 RESEMBLE_API_KEY = os.getenv("RESEMBLE_API_KEY")
 

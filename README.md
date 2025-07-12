@@ -20,12 +20,47 @@ A Python-based ASMR agent that generates ASMR audio and video content using scri
 
 ## Usage
 
-Run the main scripts to generate ASMR content. Example:
+### Run the full pipeline:
 
 ```bash
-python generate_script.py
-python generate_audio.py
-python generate_video.py
+python scripts/run_pipeline.py
+```
+
+### Run individual generators:
+
+```bash
+# Generate script only
+python scripts/generate_individual.py script
+
+# Generate audio (uses most recent session)
+python scripts/generate_individual.py audio
+
+# Generate video (uses most recent session)
+python scripts/generate_individual.py video
+
+# Generate audio for specific session
+python scripts/generate_individual.py audio output/asmr_session_20241201_143022_001
+```
+
+## Project Structure
+
+```
+asmr-agent/
+├── src/                          # Source code
+│   ├── generators/               # Generation modules
+│   │   ├── script_generator.py  # OpenAI script generation
+│   │   ├── audio_generator.py   # Resemble AI audio generation
+│   │   └── video_generator.py   # Pexels video generation
+│   ├── utils/                    # Utility modules
+│   │   └── pexels_utils.py      # Pexels API utilities
+│   └── config/                   # Configuration
+│       └── constants.py         # Constants and session management
+├── scripts/                      # Executable scripts
+│   ├── run_pipeline.py          # Full pipeline runner
+│   └── generate_individual.py   # Individual generator runner
+├── output/                       # Generated content (session folders)
+├── tests/                        # Test files
+└── docs/                         # Documentation
 ```
 
 ## License

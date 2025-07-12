@@ -1,6 +1,6 @@
 from openai import OpenAI
 import os
-from constants import MODEL_NAME, get_session_folder, save_session_info
+from src.config.constants import MODEL_NAME, get_session_folder, save_session_info
 from dotenv import load_dotenv
 
 load_dotenv()

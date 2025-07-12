@@ -1,7 +1,7 @@
 import os
 import sys
-from pexels_utils import search_pexels_video, download_video
-from constants import save_session_info
+from src.utils.pexels_utils import search_pexels_video, download_video
+from src.config.constants import save_session_info
 import json
 
 def generate_video(session_path=None):

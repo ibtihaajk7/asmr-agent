@@ -4,9 +4,9 @@ Full ASMR Pipeline Runner
 Runs script generation, audio generation, and video generation in sequence.
 """
 
-from generate_script import generate_script
-from generate_audio import generate_audio
-from generate_video import generate_video
+from src.generators.script_generator import generate_script
+from src.generators.audio_generator import generate_audio
+from src.generators.video_generator import generate_video
 import time
 
 def run_full_pipeline():

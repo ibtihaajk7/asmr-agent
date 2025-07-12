@@ -3,7 +3,7 @@ import sys
 from dotenv import load_dotenv
 from resemble import Resemble
 import json
-from constants import save_session_info
+from src.config.constants import save_session_info
 
 # Load API key from .env file
 load_dotenv()

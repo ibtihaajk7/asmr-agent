@@ -507,4 +507,3 @@ py-version=3.11
 load-plugins=pylint.extensions.docparams
 extension-pkg-allow-list=
 fail-under=9.0
-

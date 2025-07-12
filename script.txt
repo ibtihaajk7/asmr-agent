@@ -1,1 +1,0 @@
-<speak prompt="Speak in whisper-style, soft tone">Close your eyes... imagine the ocean... waves gently lapping... under the moonlight... a soft breeze... night’s calm embrace... let go... breathe... relax...</speak>

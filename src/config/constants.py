@@ -1,34 +1,58 @@
-# constants.py
-# Edit this file to change the OpenAI model used throughout the project.
-# MODEL_NAME = "gpt-4o" 
-# MODEL_NAME = "gpt-3.5-turbo" 
-MODEL_NAME = "gpt-4o-mini" 
+"""Configuration constants for ASMR generation."""
 
+import json
 import os
 from datetime import datetime
-import json
+
+# Model configuration
+MODEL_NAME = "gpt-4o-mini"
+VOICE_ID = "ba4210af"
+OUTPUT_DIR = "output"
+
 
 def get_session_folder():
-    """Generate a unique folder name for each session"""
+    """Create and return a unique session folder path."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
-    # Create output directory if it doesn't exist
-    output_dir = "output"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    
-    # Check for existing sessions and increment counter
-    session_counter = 1
+    counter = 1
     while True:
-        session_name = f"asmr_session_{timestamp}_{session_counter:03d}"
-        session_path = os.path.join(output_dir, session_name)
+        session_name = f"asmr_session_{timestamp}_{counter:03d}"
+        session_path = os.path.join(OUTPUT_DIR, session_name)
         if not os.path.exists(session_path):
-            os.makedirs(session_path)
+            os.makedirs(session_path, exist_ok=True)
             return session_path
-        session_counter += 1
+        counter += 1
 
-def save_session_info(session_path, info_dict):
-    """Save session information to a JSON file"""
-    info_file = os.path.join(session_path, "session_info.json")
-    with open(info_file, "w") as f:
-        json.dump(info_dict, f, indent=2)
+
+def get_latest_session_folder():
+    """Get the most recent session folder or None if none exists."""
+    if not os.path.exists(OUTPUT_DIR):
+        print("❌ No output directory found. Run generate_script.py first.")
+        return None
+
+    # Find the most recent session folder
+    sessions = [d for d in os.listdir(OUTPUT_DIR) if d.startswith("asmr_session_")]
+    if not sessions:
+        print("❌ No session folders found. Run generate_script.py first.")
+        return None
+
+    sessions.sort(reverse=True)  # Most recent first
+    session_folder = os.path.join(OUTPUT_DIR, sessions[0])
+    print(f"📁 Using existing session: {session_folder}")
+    return session_folder
+
+
+def load_session_info(session_folder):
+    """Load session info from JSON file or create default structure."""
+    session_info_path = os.path.join(session_folder, "session_info.json")
+    if os.path.exists(session_info_path):
+        with open(session_info_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    else:
+        return {"session_path": session_folder, "files": {}}
+
+
+def save_session_info(session_path, session_info):
+    """Save session information to JSON file."""
+    session_info_path = os.path.join(session_path, "session_info.json")
+    with open(session_info_path, "w", encoding="utf-8") as f:
+        json.dump(session_info, f, indent=2)

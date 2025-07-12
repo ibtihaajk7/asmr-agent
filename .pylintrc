@@ -436,33 +436,23 @@ disable=raw-checker-failed,
         use-symbolic-message-instead,
         use-implicit-booleaness-not-comparison-to-string,
         use-implicit-booleaness-not-comparison-to-zero,
-        import-error,
-        duplicate-code,
-        missing-module-docstring,
-        missing-class-docstring,
-        missing-function-docstring,
-        line-too-long,
-        trailing-whitespace,
-        missing-final-newline,
-        redefined-outer-name,
-        fixme
+        E0401,  # import-error
+        R0801,  # duplicate-code
+        C0114,  # missing-module-docstring
+        C0115,  # missing-class-docstring
+        C0116,  # missing-function-docstring
+        C0301,  # line-too-long
+        C0303,  # trailing-whitespace
+        C0304,  # missing-final-newline
+        W0621,  # redefined-outer-name
+        W0511   # fixme/todo
+
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
 # multiple time (only on the command line, not in the configuration file where
 # it should appear only once). See also the "--disable" option for examples.
 enable=
-disable=
-    C0114,  # missing-module-docstring
-    C0115,  # missing-class-docstring
-    C0116,  # missing-function-docstring
-    C0301,  # line-too-long
-    C0303,  # trailing-whitespace
-    C0304,  # missing-final-newline
-    W0621,  # redefined-outer-name
-    R0801,  # duplicate-code
-    W0511,  # fixme/todo
-    E0401,  # import-error (often flagged for valid 3rd-party libs in isolated runs)
 [METHOD_ARGS]
 
 # List of qualified names (i.e., library.method) which require a timeout

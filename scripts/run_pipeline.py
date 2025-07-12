@@ -1,56 +1,37 @@
-#!/usr/bin/env python3
-"""
-Full ASMR Pipeline Runner
-Runs script generation, audio generation, and video generation in sequence.
-"""
+"""Full pipeline script for ASMR generation."""
 
 from src.generators.script_generator import generate_script
 from src.generators.audio_generator import generate_audio
 from src.generators.video_generator import generate_video
-import time
 
 
 def run_full_pipeline():
     """Run the complete ASMR generation pipeline."""
-    print("🎬 Starting ASMR Pipeline...")
-    print("=" * 50)
+    print("🎬 Starting ASMR Generation Pipeline")
+    print("=" * 40)
 
     # Step 1: Generate script
-    print("📝 Step 1: Generating ASMR script...")
+    print("\n1️⃣ Generating script...")
     session_path = generate_script()
-    if not session_path:
-        print("❌ Failed to generate script")
-        return None
-
-    print("=" * 50)
+    print(f"✅ Script generated in: {session_path}")
 
     # Step 2: Generate audio
-    print("🎧 Step 2: Generating ASMR audio...")
+    print("\n2️⃣ Generating audio...")
     session_path = generate_audio(session_path)
-    if not session_path:
-        print("❌ Failed to generate audio")
-        return None
-
-    print("=" * 50)
+    print(f"✅ Audio generated in: {session_path}")
 
     # Step 3: Generate video
-    print("🎥 Step 3: Generating video...")
+    print("\n3️⃣ Generating video...")
     session_path = generate_video(session_path)
-    if not session_path:
-        print("❌ Failed to generate video")
-        return None
+    print(f"✅ Video generated in: {session_path}")
 
-    print("=" * 50)
-    print("🎉 Pipeline completed successfully!")
+    print("\n🎯 Pipeline Complete!")
     print(f"📁 All files saved in: {session_path}")
-    print("📋 Files created:")
-    print("   - script.txt")
-    print("   - asmr.wav")
-    print("   - pexels_video.mp4")
-    print("   - session_info.json")
+    print("🎉 Your ASMR content is ready!")
 
     return session_path
 
 
 if __name__ == "__main__":
-    run_full_pipeline()
+    result_path = run_full_pipeline()
+    print(f"\n🎯 Final session folder: {result_path}")

@@ -7,9 +7,9 @@ from src.utils.pexels_utils import search_pexels_video, download_video
 from src.config.constants import save_session_info
 
 
-def generate_video(session_path=None):
+def generate_video(session_folder=None):
     """Generate video using Pexels API and save to session folder."""
-    if session_path is None:
+    if session_folder is None:
         # If no session path provided, look for the most recent session
         output_dir = "output"
         if not os.path.exists(output_dir):
@@ -23,32 +23,32 @@ def generate_video(session_path=None):
             return None
 
         sessions.sort(reverse=True)  # Most recent first
-        session_path = os.path.join(output_dir, sessions[0])
-        print(f"📁 Using existing session: {session_path}")
+        session_folder = os.path.join(output_dir, sessions[0])
+        print(f"📁 Using existing session: {session_folder}")
 
     # Choose video type based on the voice script or audio background
     video_type = "ocean"  # you can vary this dynamically later
     video_url = search_pexels_video(query=video_type, duration=30)
 
     # Download video to session folder
-    video_path = os.path.join(session_path, "pexels_video.mp4")
+    video_path = os.path.join(session_folder, "pexels_video.mp4")
     download_video(video_url, video_path)
 
     # Update session info
-    session_info_path = os.path.join(session_path, "session_info.json")
+    session_info_path = os.path.join(session_folder, "session_info.json")
     if os.path.exists(session_info_path):
         with open(session_info_path, "r", encoding="utf-8") as f:
             session_info = json.load(f)
     else:
-        session_info = {"session_path": session_path, "files": {}}
+        session_info = {"session_path": session_folder, "files": {}}
 
     session_info["files"]["video"] = "pexels_video.mp4"
     session_info["video_type"] = video_type
     session_info["video_url"] = video_url
-    save_session_info(session_path, session_info)
+    save_session_info(session_folder, session_info)
 
     print(f"✅ Video saved to {video_path}")
-    return session_path
+    return session_folder
 
 
 if __name__ == "__main__":

@@ -3,11 +3,9 @@
 import os
 import sys
 import json
+import requests
 from dotenv import load_dotenv
 from resemble import Resemble
-
-# Download and save the audio file to session folder
-import requests
 from src.config.constants import save_session_info
 
 # Load API key from .env file
@@ -18,9 +16,9 @@ RESEMBLE_API_KEY = os.getenv("RESEMBLE_API_KEY")
 Resemble.api_key(RESEMBLE_API_KEY)
 
 
-def generate_audio(session_path=None):
+def generate_audio(session_folder=None):
     """Generate ASMR audio using Resemble AI and save to session folder."""
-    if session_path is None:
+    if session_folder is None:
         # If no session path provided, look for the most recent session
         output_dir = "output"
         if not os.path.exists(output_dir):
@@ -34,22 +32,22 @@ def generate_audio(session_path=None):
             return None
 
         sessions.sort(reverse=True)  # Most recent first
-        session_path = os.path.join(output_dir, sessions[0])
-        print(f"📁 Using existing session: {session_path}")
+        session_folder = os.path.join(output_dir, sessions[0])
+        print(f"📁 Using existing session: {session_folder}")
 
-    # ✅ Get your default project
+    # Get your default project
     projects = Resemble.v2.projects.all(1, 10)
     project_uuid = projects["items"][0]["uuid"]
 
-    # ✅ Get your voice UUID
+    # Get your voice UUID
     voice_uuid = "ba4210af"
 
-    # ✅ Read your ASMR script from session folder
-    script_path = os.path.join(session_path, "script.txt")
+    # Read your ASMR script from session folder
+    script_path = os.path.join(session_folder, "script.txt")
     with open(script_path, "r", encoding="utf-8") as f:
         text = f.read()
 
-    # ✅ Create the clip synchronously
+    # Create the clip synchronously
     clip = Resemble.v2.clips.create_sync(
         project_uuid,
         voice_uuid,
@@ -59,30 +57,30 @@ def generate_audio(session_path=None):
         precision="PCM_16",
     )
 
-    # ✅ Download the audio
+    # Download the audio
     print(json.dumps(clip, indent=2))
     audio_url = clip["item"]["audio_src"]
     print(f"🎧 Audio URL: {audio_url}")
 
     audio = requests.get(audio_url, timeout=90)
-    audio_path = os.path.join(session_path, "asmr.wav")
+    audio_path = os.path.join(session_folder, "asmr.wav")
     with open(audio_path, "wb") as f:
         f.write(audio.content)
 
     # Update session info
-    session_info_path = os.path.join(session_path, "session_info.json")
+    session_info_path = os.path.join(session_folder, "session_info.json")
     if os.path.exists(session_info_path):
         with open(session_info_path, "r", encoding="utf-8") as f:
             session_info = json.load(f)
     else:
-        session_info = {"session_path": session_path, "files": {}}
+        session_info = {"session_path": session_folder, "files": {}}
 
     session_info["files"]["audio"] = "asmr.wav"
     session_info["audio_url"] = audio_url
-    save_session_info(session_path, session_info)
+    save_session_info(session_folder, session_info)
 
     print(f"✅ Audio saved to {audio_path}")
-    return session_path
+    return session_folder
 
 
 if __name__ == "__main__":

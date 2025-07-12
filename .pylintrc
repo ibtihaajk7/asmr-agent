@@ -301,18 +301,6 @@ logging-format-style=old
 # function parameter format.
 logging-modules=logging
 [MESSAGES CONTROL]
-disable=
-    C0114,  # missing-module-docstring
-    C0115,  # missing-class-docstring
-    C0116,  # missing-function-docstring
-    C0301,  # line-too-long
-    C0303,  # trailing-whitespace
-    C0304,  # missing-final-newline
-    W0621,  # redefined-outer-name
-    R0801,  # duplicate-code
-    W0511,  # fixme/todo
-    E0401,  # import-error (often flagged for valid 3rd-party libs in isolated runs)
-
 # Only show warnings with the listed confidence levels. Leave empty to show
 # all. Valid levels: HIGH, CONTROL_FLOW, INFERENCE, INFERENCE_FAILURE,
 # UNDEFINED.

@@ -1,7 +1,7 @@
 """Configuration constants for ASMR generation."""
 
-import os
 import json
+import os
 from datetime import datetime
 
 # Model configuration
@@ -21,6 +21,34 @@ def get_session_folder():
             os.makedirs(session_path, exist_ok=True)
             return session_path
         counter += 1
+
+
+def get_latest_session_folder():
+    """Get the most recent session folder or None if none exists."""
+    if not os.path.exists(OUTPUT_DIR):
+        print("❌ No output directory found. Run generate_script.py first.")
+        return None
+
+    # Find the most recent session folder
+    sessions = [d for d in os.listdir(OUTPUT_DIR) if d.startswith("asmr_session_")]
+    if not sessions:
+        print("❌ No session folders found. Run generate_script.py first.")
+        return None
+
+    sessions.sort(reverse=True)  # Most recent first
+    session_folder = os.path.join(OUTPUT_DIR, sessions[0])
+    print(f"📁 Using existing session: {session_folder}")
+    return session_folder
+
+
+def load_session_info(session_folder):
+    """Load session info from JSON file or create default structure."""
+    session_info_path = os.path.join(session_folder, "session_info.json")
+    if os.path.exists(session_info_path):
+        with open(session_info_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    else:
+        return {"session_path": session_folder, "files": {}}
 
 
 def save_session_info(session_path, session_info):

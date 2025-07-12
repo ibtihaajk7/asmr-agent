@@ -6,7 +6,11 @@ import json
 import requests
 from dotenv import load_dotenv
 from resemble import Resemble
-from src.config.constants import save_session_info
+from src.config.constants import (
+    save_session_info,
+    get_latest_session_folder,
+    load_session_info,
+)
 
 # Load API key from .env file
 load_dotenv()
@@ -19,21 +23,9 @@ Resemble.api_key(RESEMBLE_API_KEY)
 def generate_audio(session_folder=None):
     """Generate ASMR audio using Resemble AI and save to session folder."""
     if session_folder is None:
-        # If no session path provided, look for the most recent session
-        output_dir = "output"
-        if not os.path.exists(output_dir):
-            print("❌ No output directory found. Run generate_script.py first.")
+        session_folder = get_latest_session_folder()
+        if session_folder is None:
             return None
-
-        # Find the most recent session folder
-        sessions = [d for d in os.listdir(output_dir) if d.startswith("asmr_session_")]
-        if not sessions:
-            print("❌ No session folders found. Run generate_script.py first.")
-            return None
-
-        sessions.sort(reverse=True)  # Most recent first
-        session_folder = os.path.join(output_dir, sessions[0])
-        print(f"📁 Using existing session: {session_folder}")
 
     # Get your default project
     projects = Resemble.v2.projects.all(1, 10)
@@ -68,13 +60,7 @@ def generate_audio(session_folder=None):
         f.write(audio.content)
 
     # Update session info
-    session_info_path = os.path.join(session_folder, "session_info.json")
-    if os.path.exists(session_info_path):
-        with open(session_info_path, "r", encoding="utf-8") as f:
-            session_info = json.load(f)
-    else:
-        session_info = {"session_path": session_folder, "files": {}}
-
+    session_info = load_session_info(session_folder)
     session_info["files"]["audio"] = "asmr.wav"
     session_info["audio_url"] = audio_url
     save_session_info(session_folder, session_info)

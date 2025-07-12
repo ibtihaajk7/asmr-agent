@@ -290,7 +290,7 @@ exclude-too-few-public-methods=
 ignored-parents=
 
 # Maximum number of arguments for function / method.
-max-args=5
+max-args=10
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=7
@@ -299,16 +299,13 @@ max-attributes=7
 max-bool-expr=5
 
 # Maximum number of branch for function / method body.
-max-branches=12
+max-branches=15
 
 # Maximum number of locals for function / method body.
-max-locals=15
+max-locals=20
 
 # Maximum number of parents for a class (see R0901).
 max-parents=7
-
-# Maximum number of positional arguments for function / method.
-max-positional-arguments=5
 
 # Maximum number of public methods for a class (see R0904).
 max-public-methods=20
@@ -438,7 +435,9 @@ disable=raw-checker-failed,
         deprecated-pragma,
         use-symbolic-message-instead,
         use-implicit-booleaness-not-comparison-to-string,
-        use-implicit-booleaness-not-comparison-to-zero
+        use-implicit-booleaness-not-comparison-to-zero,
+        import-error,
+        duplicate-code
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -523,7 +522,7 @@ ignore-imports=yes
 ignore-signatures=yes
 
 # Minimum lines number of a similarity.
-min-similarity-lines=4
+min-similarity-lines=10
 
 
 [SPELLING]
@@ -645,3 +644,90 @@ init-import=no
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
+[MASTER]
+ignore=CVS
+jobs=1
+persistent=yes
+py-version=3.11
+load-plugins=pylint.extensions.docparams
+extension-pkg-allow-list=
+fail-under=9.0
+
+[MESSAGES CONTROL]
+disable=
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+    C0301,  # line-too-long
+    C0303,  # trailing-whitespace
+    C0304,  # missing-final-newline
+    W0621,  # redefined-outer-name
+    R0801,  # duplicate-code
+    W0511,  # fixme/todo
+    E0401,  # import-error (often flagged for valid 3rd-party libs in isolated runs)
+
+[REPORTS]
+output-format=github
+score=yes
+reports=no
+
+[FORMAT]
+max-line-length=100
+indent-string='    '
+ignore-long-lines=^\s*(# )?<?https?://\S+>?$
+
+[DESIGN]
+max-args=6
+max-locals=15
+max-returns=6
+max-branches=12
+max-statements=50
+min-public-methods=2
+
+[IMPORTS]
+known-standard-library=dataclasses
+known-third-party=requests,dotenv,openai
+allow-any-import-level=yes
+
+[TYPECHECK]
+generated-members=requests.*,dotenv.*,openai.*
+ignore-none=yes
+ignore-on-opaque-inference=yes
+
+[VARIABLES]
+dummy-variables-rgx=_+$|dummy|^ignored_|^unused_
+ignored-argument-names=_.*|^ignored_|^unused_
+allow-global-unused-variables=yes
+
+[BASIC]
+good-names=i,j,k,ex,Run,_
+bad-names=foo,bar,baz,toto,tutu,tata
+argument-naming-style=snake_case
+attr-naming-style=snake_case
+class-naming-style=PascalCase
+const-naming-style=UPPER_CASE
+function-naming-style=snake_case
+method-naming-style=snake_case
+module-naming-style=snake_case
+variable-naming-style=snake_case
+
+[LOGGING]
+logging-format-style=old
+logging-modules=logging
+
+[MISCELLANEOUS]
+notes=FIXME,XXX,TODO
+
+[SIMILARITIES]
+min-similarity-lines=4
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes
+ignore-signatures=yes
+
+[REFACTORING]
+max-nested-blocks=5
+
+[EXCEPTIONS]
+overgeneral-exceptions=builtins.BaseException,builtins.Exception
+

@@ -2,8 +2,8 @@
 
 import os
 import random
-import ffmpeg as ffmpeg_lib
 from pathlib import Path
+import ffmpeg as ffmpeg_lib
 from dotenv import load_dotenv
 from src.config.constants import (
     get_latest_session_folder,
@@ -42,8 +42,8 @@ def mix_audio_with_background(asmr_audio_path, session_folder, video_path=None):
             stream = ffmpeg_lib.output(stream, mixed_audio_path, acodec='copy')
             ffmpeg_lib.run(stream, overwrite_output=True, quiet=True)
             return mixed_audio_path
-        except Exception as e:
-            print(f"❌ Error copying audio: {e}")
+        except Exception:
+            print("❌ Error copying audio")
             return None
     
     # Select random background audio
@@ -96,8 +96,8 @@ def mix_audio_with_background(asmr_audio_path, session_folder, video_path=None):
             stream = ffmpeg_lib.output(stream, mixed_audio_path, acodec='copy')
             ffmpeg_lib.run(stream, overwrite_output=True, quiet=True)
             return mixed_audio_path
-        except Exception as e:
-            print(f"❌ Error copying audio: {e}")
+        except Exception:
+            print("❌ Error copying audio")
             return None
 
 

@@ -37,7 +37,7 @@ def main():
     result_path = generate_final_video(session_arg)
     
     if result_path:
-        print(f"\n🎯 Final video created successfully!")
+        print("\n🎯 Final video created successfully!")
         print(f"📁 Location: {result_path}")
         print("✅ Ready to share!")
     else:

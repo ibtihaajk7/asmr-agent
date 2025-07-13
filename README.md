@@ -15,7 +15,7 @@ A Python-based ASMR agent that generates ASMR audio and video content using scri
    ```
    On Windows PowerShell, you should activate your virtual environment with:
    ```bash
-   python3 -m venv venv
+   python -m venv venv
    .\venv\Scripts\Activate.ps1
    ```
     
@@ -27,7 +27,7 @@ A Python-based ASMR agent that generates ASMR audio and video content using scri
 
 ## Usage
 
-### Run the full pipeline:
+### Run the full pipeline
 
 ```bash
 python scripts/run_pipeline.py
@@ -36,18 +36,14 @@ python scripts/run_pipeline.py
 ### Run individual generators:
 
 ```bash
-# Generate script only
-python scripts/generate_individual.py script
-
-# Generate audio (uses most recent session)
-python scripts/generate_individual.py audio
-
-# Generate video (uses most recent session)
-python scripts/generate_individual.py video
-
-# Generate audio for specific session
-python scripts/generate_individual.py audio output/asmr_session_20241201_143022_001
+python scripts/generate_individual.py
 ```
+
+This will present you with a menu to choose which component to generate:
+- **Script only** - Generates ASMR script using OpenAI
+- **Audio only** - Generates audio from script (uses most recent session)
+- **Video only** - Generates video with audio (uses most recent session)
+- **All components** - Generates script, audio, and video in sequence
 
 ## Project Structure
 
@@ -65,6 +61,8 @@ asmr-agent/
 ├── scripts/                      # Executable scripts
 │   ├── run_pipeline.py          # Full pipeline runner
 │   └── generate_individual.py   # Individual generator runner
+├── assets/                       # Static assets
+│   └── background_audio/        # Background audio files for videos
 ├── output/                       # Generated content (session folders)
 ├── tests/                        # Test files
 └── docs/                         # Documentation

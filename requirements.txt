@@ -1,3 +1,5 @@
 openai
-bark
 python-dotenv
+resemble
+ffmpeg-python
+requests

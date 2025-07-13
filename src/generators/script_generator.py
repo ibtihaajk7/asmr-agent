@@ -34,6 +34,9 @@ def generate_script():
     )
 
     script = response.choices[0].message.content
+    
+    if not script:
+        raise ValueError("No script content received from API")
 
     # Save script to session folder
     script_path = os.path.join(session_folder, "script.txt")

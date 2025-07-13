@@ -445,7 +445,8 @@ disable=raw-checker-failed,
         C0303,  # trailing-whitespace
         C0304,  # missing-final-newline
         W0621,  # redefined-outer-name
-        W0511   # fixme/todo
+        W0511,  # fixme/todo
+        W0718,  # raise-missing-from
 
 
 # Enable the message, report, category or checker with the given id(s). You can

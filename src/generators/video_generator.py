@@ -2,7 +2,6 @@
 
 import os
 import sys
-import json
 from src.utils.pexels_utils import search_pexels_video, download_video
 from src.config.constants import (
     save_session_info,

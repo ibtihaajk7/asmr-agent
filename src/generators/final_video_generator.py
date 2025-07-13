@@ -29,8 +29,8 @@ def get_background_audio_files():
     return ocean_files
 
 
-def mix_audio_with_background(asmr_audio_path, session_folder):
-    """Mix ASMR audio (70%) with random background audio (30%)."""
+def mix_audio_with_background(asmr_audio_path, session_folder, video_path=None):
+    """Mix ASMR audio (90%) with random background audio (10% then 80%)."""
     background_files = get_background_audio_files()
     
     if not background_files:
@@ -52,17 +52,33 @@ def mix_audio_with_background(asmr_audio_path, session_folder):
     
     mixed_audio_path = os.path.join(session_folder, "mixed_audio.wav")
     
-    # Mix audio using ffmpeg_lib: ASMR at 80% volume, background at 20%
+    # Mix audio using ffmpeg_lib: ASMR at 90% volume, background at 10% then 80%
     try:
         asmr_stream = ffmpeg_lib.input(asmr_audio_path)
         bg_stream = ffmpeg_lib.input(str(background_file))
         
-        # Apply volume filters
-        asmr_volume = ffmpeg_lib.filter(asmr_stream, 'volume', 0.9)
-        bg_volume = ffmpeg_lib.filter(bg_stream, 'volume', 0.1)
+        # Get ASMR duration to know when to fade background up
+        asmr_info = ffmpeg_lib.probe(asmr_audio_path)
+        asmr_duration = float(asmr_info['streams'][0]['duration'])
         
-        # Mix the audio streams - use 'longest' so background loops to match video duration
-        mixed_stream = ffmpeg_lib.filter([asmr_volume, bg_volume], 'amix', inputs=2, duration='longest')
+        # Get video duration to trim audio to match
+        if video_path:
+            video_info = ffmpeg_lib.probe(video_path)
+            video_duration = float(video_info['streams'][0]['duration'])
+        else:
+            video_duration = 30.0  # Default fallback
+        
+        # Apply volume filters with dynamic background volume
+        asmr_volume = ffmpeg_lib.filter(asmr_stream, 'volume', 0.8)
+        
+        # Background: starts at 10%, fades up to 80% after ASMR ends, trimmed to video duration
+        bg_volume = ffmpeg_lib.filter(bg_stream, 'volume', 0.2)
+        bg_fade_up = ffmpeg_lib.filter(bg_volume, 'afade', t='in', start_time=asmr_duration, duration=1)
+        bg_final = ffmpeg_lib.filter(bg_fade_up, 'volume', 4.0)  # Multiply by 8 to go from 0.1 to 0.8
+        bg_trimmed = ffmpeg_lib.filter(bg_final, 'atrim', duration=video_duration)
+        
+        # Mix the audio streams - use 'shortest' to match video duration
+        mixed_stream = ffmpeg_lib.filter([asmr_volume, bg_trimmed], 'amix', inputs=2, duration='shortest')
         
         # Output the mixed audio
         output_stream = ffmpeg_lib.output(mixed_stream, mixed_audio_path)
@@ -137,7 +153,7 @@ def generate_final_video(session_folder=None):
     
     # Step 1: Mix audio with background
     print("\n1️⃣ Mixing audio with background sounds...")
-    mixed_audio_path = mix_audio_with_background(asmr_audio_path, session_folder)
+    mixed_audio_path = mix_audio_with_background(asmr_audio_path, session_folder, video_path)
     
     # Step 2: Combine with video
     print("\n2️⃣ Combining audio with video...")

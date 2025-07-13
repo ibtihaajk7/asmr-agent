@@ -13,6 +13,13 @@ A Python-based ASMR agent that generates ASMR audio and video content using scri
    python3 -m venv venv
    source venv/bin/activate
    ```
+   On Windows PowerShell, you should activate your virtual environment with:
+   ```bash
+   python3 -m venv venv
+   .\venv\Scripts\Activate.ps1
+   ```
+    
+
 3. Install dependencies:
    ```bash
    pip install -r requirements.txt

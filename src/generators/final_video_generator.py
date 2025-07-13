@@ -2,6 +2,7 @@
 
 import os
 import random
+import ffmpeg as ffmpeg_lib
 from pathlib import Path
 from dotenv import load_dotenv
 from src.config.constants import (
@@ -11,7 +12,6 @@ from src.config.constants import (
 )
 
 load_dotenv()
-import ffmpeg as ffmpeg_lib
 print("🔍 ffmpeg module loaded from:", ffmpeg_lib.__file__)
 
 
@@ -71,10 +71,10 @@ def mix_audio_with_background(asmr_audio_path, session_folder, video_path=None):
         # Apply volume filters with dynamic background volume
         asmr_volume = ffmpeg_lib.filter(asmr_stream, 'volume', 0.8)
         
-        # Background: starts at 10%, fades up to 80% after ASMR ends, trimmed to video duration
+        # Background: starts at 20%, fades up to 80% after ASMR ends, trimmed to video duration
         bg_volume = ffmpeg_lib.filter(bg_stream, 'volume', 0.2)
         bg_fade_up = ffmpeg_lib.filter(bg_volume, 'afade', t='in', start_time=asmr_duration, duration=1)
-        bg_final = ffmpeg_lib.filter(bg_fade_up, 'volume', 4.0)  # Multiply by 8 to go from 0.1 to 0.8
+        bg_final = ffmpeg_lib.filter(bg_fade_up, 'volume', 4.0)  # Multiply by 4 to go from 0.2 to 0.8
         bg_trimmed = ffmpeg_lib.filter(bg_final, 'atrim', duration=video_duration)
         
         # Mix the audio streams - use 'shortest' to match video duration
@@ -169,9 +169,9 @@ def generate_final_video(session_folder=None):
         
         print(f"\n🎯 Final video ready for sharing: {final_video_path}")
         return final_video_path
-    else:
-        print("❌ Failed to create final video.")
-        return None
+    
+    print("❌ Failed to create final video.")
+    return None
 
 
 if __name__ == "__main__":
